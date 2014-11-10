@@ -1,10 +1,22 @@
 ---
+- name: Check if Nexpose is already installed
+  stat: path=/opt/rapid7/nexpose
+  register: nexpose_install_check
+  tags: [ 'nexpose' ]
+
+- name: See if installer is already downloaded
+  stat: path=/tmp/NeXposeSetup-Linux64.bin
+  register: install_file_check
+  tags: [ 'nexpose' ]
+
 - name: Download nexpose installer
   get_url: url={{ nexpose_download_url }} dest=/tmp/ mode=0700
-  tags: nexpose
+  when: not install_file_check.stat.exists and not nexpose_install_check.stat.exists
+  tags: [ 'nexpose' ]
 
 - name: Diasble SELinux
   selinux: state=disabled
+  tags: [ 'nexpose' ]
 
 - name: Install nexpose
   shell: /tmp/NeXposeSetup-Linux64.bin -q -overwrite
@@ -18,26 +30,28 @@
             -Vsys.component.engine\\$Boolean='{{ nexpose_console }}'
             -VinitService\$Boolean='{{ nexpose_init_service }}'
             -Dinstall4j.suppressUnattendedReboot='{{ nexpose_suppress_unattended_reboot }}'
-  tags: install
+  when: not nexpose_install_check.stat.exists
+  tags: [ 'nexpose' , 'install' ]
 
 - name: Start Nexpose
   service: name=nexposeengine.rc enabled=no state=started
-  tags: nexpose
+  when: not nexpose_install_check.stat.exists
+  tags: [ 'nexpose' ]
 
 # - name: Remove nexpose installer
 #   file: /tmp/NeXposeSetup-Linux64.bin state=absent
-#   tags: nexpose
+#   tags: [ 'nexpose' ]
 
 - name: Copy CA Certs to be added to the keystore
   copy: src={{ item.name }} dest=/etc/pki/tls/certs owner=root group=root mode=0644
   with_items: nexpose_cacerts
-  tags: test
+  tags: [ 'nexpose' , 'certs' ]
 
 - name: Add Comodo cert to key store
   java_keystore: cert=/etc/pki/tls/certs/{{ item.name }} keystore=cacerts password=changeit alias={{ item.alias }} state={{ item.state }}
   with_items: nexpose_cacerts
-  tags: test
+  tags: [ 'nexpose' , 'certs' ]
 
-# See what's in the keystore
+# How to see what's in the keystore
 # /opt/rapid7/nexpose/_jvm*/bin/keytool -list -v -keystore /opt/rapid7/nexpose/_jvm*/lib/security/cacerts
 # Default password is 'changeit'

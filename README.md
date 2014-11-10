@@ -52,6 +52,7 @@ You can use `var_prompt` to enter the initial password.
         - name: nexpose_logon_password
           prompt: "Enter logon password"
           private: yes
+          confirm: yes
 
       roles:
         - nexpose
