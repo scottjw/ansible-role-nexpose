@@ -13,14 +13,25 @@ Role Variables
 --------------
 
 **nexpose_download_url**    URL of Nexpose install binary.
+
 **nexpose_first_name**      Registered user first name.
+
 **nexpose_last_name**       Registered user last name.
+
 **nexpose_company_name**    Registered company name.
+
 **nexpose_logon_name**      Username for initial logon to console.
-**nexpose_console**         Whether this is a console or just a scan enginer (Default: True)
-**nexpose_init_service**    Whether to start the Nexpose service after installation (Default: False)
+
+**nexpose_console**         Whether this is a console or just a scan enginer (
+Default: True)
+
+**nexpose_init_service**    Whether to start the Nexpose service after 
+installation (Default: False)
+
 **nexpose_suppress_unattended_reboot**  Not really sure. (Default: true)
-**nexpose_ca_certs**        List of Certificates to add to the deafult Java keystore. This is to prevent erronous untrusted CA findings.
+
+**nexpose_ca_certs**        List of Certificates to add to the deafult Java 
+keystore. This is to prevent erronous untrusted CA findings.
 
 
 Dependencies
@@ -32,7 +43,7 @@ Example Playbook
 ----------------
 You can use `var_prompt` to enter the initial password.
 
-
+```yaml
     - name: Configure Nexpose console or scanner
       hosts: nexpose
       sudo: yes
@@ -44,6 +55,7 @@ You can use `var_prompt` to enter the initial password.
 
       roles:
         - nexpose
+```
 
 License
 -------
