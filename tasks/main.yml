@@ -1,0 +1,43 @@
+---
+- name: Download nexpose installer
+  get_url: url={{ nexpose_download_url }} dest=/tmp/ mode=0700
+  tags: nexpose
+
+- name: Diasble SELinux
+  selinux: state=disabled
+
+- name: Install nexpose
+  shell: /tmp/NeXposeSetup-Linux64.bin -q -overwrite
+            -Vfirstname='{{ nexpose_first_name }}'
+            -Vlastname='{{ nexpose_last_name }}'
+            -Vcompany='{{ nexpose_company_name }}'
+            -Vusername='{{ nexpose_logon_username }}'
+            -Vpassword1='{{ nexpose_logon_password }}'
+            -Vpassword2='{{ nexpose_logon_password }}'
+            -Vsys.component.typical\\$Boolean=False
+            -Vsys.component.engine\\$Boolean='{{ nexpose_console }}'
+            -VinitService\$Boolean='{{ nexpose_init_service }}'
+            -Dinstall4j.suppressUnattendedReboot='{{ nexpose_suppress_unattended_reboot }}'
+  tags: install
+
+- name: Start Nexpose
+  service: name=nexposeengine.rc enabled=no state=started
+  tags: nexpose
+
+# - name: Remove nexpose installer
+#   file: /tmp/NeXposeSetup-Linux64.bin state=absent
+#   tags: nexpose
+
+- name: Copy CA Certs to be added to the keystore
+  copy: src={{ item.name }} dest=/etc/pki/tls/certs owner=root group=root mode=0644
+  with_items: nexpose_cacerts
+  tags: test
+
+- name: Add Comodo cert to key store
+  java_keystore: cert=/etc/pki/tls/certs/{{ item.name }} keystore=cacerts password=changeit alias={{ item.alias }} state={{ item.state }}
+  with_items: nexpose_cacerts
+  tags: test
+
+# See what's in the keystore
+# /opt/rapid7/nexpose/_jvm*/bin/keytool -list -v -keystore /opt/rapid7/nexpose/_jvm*/lib/security/cacerts
+# Default password is 'changeit'

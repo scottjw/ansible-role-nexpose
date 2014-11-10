@@ -1,0 +1,26 @@
+---
+nexpose_download_url: "http://download2.rapid7.com/download/NeXpose-v4/NeXposeSetup-Linux64.bin"
+nexpose_first_name: "Sam"
+nexpose_last_name: "Doran"
+nexpose_company_name: "Royall & Company"
+nexpose_logon_username: "sdoran"
+nexpose_console: true
+nexpose_init_service: false
+nexpose_suppress_unattended_reboot: true
+
+nexpose_cacerts:
+  - name: comodocalimited.crt
+    alias: ComodoCALimited
+    state: present
+
+  - name: comodohighassurancesecureserverca.crt
+    alias: ComodoHighAssuranceCA
+    state: present
+
+  - name: comodorsaca.crt
+    alias: ComodoRSACA
+    state: absent
+
+  - name: comodarsavalidationca.crt
+    alias: ComodoRSAValidationCA
+    state: present
