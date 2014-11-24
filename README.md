@@ -22,7 +22,7 @@ Role Variables
 
 **nexpose_logon_name**      Username for initial logon to console.
 
-**nexpose_console**         Whether this is a console or just a scan enginer (
+**nexpose_engine**         Whether this is a console or just a scan engine (
 Default: True)
 
 **nexpose_init_service**    Whether to start the Nexpose service after 

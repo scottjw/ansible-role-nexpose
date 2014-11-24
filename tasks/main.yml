@@ -19,23 +19,26 @@
   tags: [ 'nexpose' ]
 
 - name: Install nexpose
-  shell: /tmp/NeXposeSetup-Linux64.bin -q -overwrite
-            -Vfirstname='{{ nexpose_first_name }}'
-            -Vlastname='{{ nexpose_last_name }}'
-            -Vcompany='{{ nexpose_company_name }}'
-            -Vusername='{{ nexpose_logon_username }}'
-            -Vpassword1='{{ nexpose_logon_password }}'
-            -Vpassword2='{{ nexpose_logon_password }}'
-            -Vsys.component.typical\\$Boolean=False
-            -Vsys.component.engine\\$Boolean='{{ nexpose_console }}'
-            -VinitService\$Boolean='{{ nexpose_init_service }}'
-            -Dinstall4j.suppressUnattendedReboot='{{ nexpose_suppress_unattended_reboot }}'
+  shell: >
+    /tmp/NeXposeSetup-Linux64.bin -q -overwrite
+    -Vfirstname='{{ nexpose_first_name }}'
+    -Vlastname='{{ nexpose_last_name }}'
+    -Vcompany='{{ nexpose_company_name }}'
+    -Vusername='{{ nexpose_logon_username }}'
+    -Vpassword1='{{ nexpose_logon_password }}'
+    -Vpassword2='{{ nexpose_logon_password }}'
+    -Vsys.component.typical\\$Boolean=False
+    -Vsys.component.engine\\$Boolean='{{ nexpose_engine }}'
+    -VinitService\$Boolean='{{ nexpose_init_service }}'
+    -Dinstall4j.suppressUnattendedReboot='{{ nexpose_suppress_unattended_reboot }}'
   when: not nexpose_install_check.stat.exists
   tags: [ 'nexpose' , 'install' ]
 
 - name: Start Nexpose
-  service: name=nexposeengine.rc enabled=no state=started
-  when: not nexpose_install_check.stat.exists
+  service:
+    name={{ nexpose_service_name }}
+    enabled=no
+    state=started
   tags: [ 'nexpose' ]
 
 # - name: Remove nexpose installer
@@ -45,6 +48,7 @@
 - name: Copy CA Certs to be added to the keystore
   copy: src={{ item.name }} dest=/etc/pki/tls/certs owner=root group=root mode=0644
   with_items: nexpose_cacerts
+  when: item.state == 'present'
   tags: [ 'nexpose' , 'certs' ]
 
 - name: Add Comodo cert to key store
