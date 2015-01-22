@@ -1,23 +1,19 @@
 ---
-- name: Check if Nexpose is already installed
-  stat: path=/opt/rapid7/nexpose
-  register: nexpose_install_check
-  tags: [ 'nexpose' ]
-
-- name: See if installer is already downloaded
+- name: Check if installer is already downloaded
   stat: path=/tmp/NeXposeSetup-Linux64.bin
   register: install_file_check
   tags: [ 'nexpose' ]
 
 - name: Download nexpose installer
-  get_url: url={{ nexpose_download_url }} dest=/tmp/ mode=0700
-  when: not install_file_check.stat.exists and not nexpose_install_check.stat.exists
+  get_url: url={{ nexpose_download_url }} dest=/tmp mode=0700
+  when: not install_file_check.stat.exists
   tags: [ 'nexpose' ]
 
 - name: Diasble SELinux
   selinux: state=disabled
   tags: [ 'nexpose' ]
 
+# Look in /opt/rapid7/nexpose/.install4j/response.varfile for available variables
 - name: Install nexpose
   shell: >
     /tmp/NeXposeSetup-Linux64.bin -q -overwrite
@@ -27,18 +23,16 @@
     -Vusername='{{ nexpose_logon_username }}'
     -Vpassword1='{{ nexpose_logon_password }}'
     -Vpassword2='{{ nexpose_logon_password }}'
-    -Vsys.component.typical\\$Boolean=False
+    -Vsys.component.typical\\$Boolean=True
     -Vsys.component.engine\\$Boolean='{{ nexpose_engine }}'
     -VinitService\$Boolean='{{ nexpose_init_service }}'
     -Dinstall4j.suppressUnattendedReboot='{{ nexpose_suppress_unattended_reboot }}'
-  when: not nexpose_install_check.stat.exists
+  args:
+    creates: /opt/rapid7/nexpose
   tags: [ 'nexpose' , 'install' ]
 
-- name: Start Nexpose
-  service:
-    name={{ nexpose_service_name }}
-    enabled=no
-    state=started
+- name: Start and enable Nexpose
+  service: name={{ nexpose_service_name }} enabled=yes state=started
   tags: [ 'nexpose' ]
 
 # - name: Remove nexpose installer
