@@ -23,12 +23,13 @@
     -Vusername='{{ nexpose_logon_username }}'
     -Vpassword1='{{ nexpose_logon_password }}'
     -Vpassword2='{{ nexpose_logon_password }}'
-    -Vsys.component.typical\\$Boolean=True
-    -Vsys.component.engine\\$Boolean='{{ nexpose_engine }}'
-    -VinitService\$Boolean='{{ nexpose_init_service }}'
+    -Vsys.component.typical\$Boolean={{ nexpose_component_typical }}
+    -Vsys.component.engine\$Boolean={{ nexpose_engine }}
+    -VinitService\$Boolean={{ nexpose_init_service }}
     -Dinstall4j.suppressUnattendedReboot='{{ nexpose_suppress_unattended_reboot }}'
   args:
-    creates: /opt/rapid7/nexpose
+    creates: /opt/rapid7/nexpose/plugins
+  no_log: True
   tags: [ 'nexpose' , 'install' ]
 
 - name: Start and enable Nexpose
@@ -45,7 +46,7 @@
   when: item.state == 'present'
   tags: [ 'nexpose' , 'certs' ]
 
-- name: Add Comodo cert to key store
+- name: Add CA Certs to key store
   java_keystore: cert=/etc/pki/tls/certs/{{ item.name }} keystore=cacerts password=changeit alias={{ item.alias }} state={{ item.state }}
   with_items: nexpose_cacerts
   tags: [ 'nexpose' , 'certs' ]
