@@ -35,12 +35,26 @@
 
 - name: Set Nexpose Engine port
   replace:
+    backup: yes
     dest: "{{ nexpose_install_dir }}/nse/conf/nse.xml"
     regexp: 'port="\d+"'
     replace: 'port="{{ nexpose_engine_port }}"'
-    backup: yes
   when: nexpose_engine
-  tags: [ 'nexpose' , 'install' ]
+  notify: restart nexpose
+  tags: [ 'nexpose' , 'install' , 'fwconfig' ]
+
+- name: Set Nexpose Console port
+  lineinfile:
+    state: present
+    backrefs: yes
+    backup: yes
+    dest: '{{ nexpose_install_dir }}/nsc/conf/httpd.xml'
+    regexp: '^(<server port\s+)= "\d+"'
+    line: '\1= "{{ nexpose_console_port }}"'
+    backup: yes
+  when: not nexpose_engine
+  notify: restart nexpose
+  tags: [ 'nexpose' , 'install' , 'fwconfig' ]
 
 - name: Start and enable Nexpose
   service: name={{ nexpose_service_name }} enabled=yes state=started
