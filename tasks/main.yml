@@ -48,21 +48,10 @@
     state: present
     backrefs: yes
     backup: yes
-    dest: "{{ item.dest }}"
-    regexp: "{{ item.regexp }}"
-    line: "{{ item.line }}"
+    dest: '{{ nexpose_install_dir }}/nsc/conf/httpd.xml'
+    regexp: '^(<server port\s+)= "\d+"'
+    line: '\1= "{{ nexpose_console_port }}"'
     backup: yes
-  with_items:
-    - {
-        dest: '{{ nexpose_install_dir }}/nsc/conf/httpd.xml',
-        regexp: '^(<server port\s+)= "\d+"',
-        line: '\1= "{{ nexpose_console_port }}"'
-      }
-    - {
-        dest: '{{ nexpose_install_dir }}/nsc/conf/nsc.xml',
-        regexp: '^( <WebServer port=")\d+"(.*)$',
-        line: '\1{{ nexpose_console_port }}\2"'
-      }
   when: not nexpose_engine
   notify: restart nexpose
   tags: [ 'nexpose' , 'install' , 'fwconfig' ]
