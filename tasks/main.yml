@@ -30,7 +30,19 @@
     -Dinstall4j.suppressUnattendedReboot='{{ nexpose_suppress_unattended_reboot }}'
   args:
     creates: /opt/rapid7/nexpose/plugins
+  register: nexpose_install
   no_log: True
+  tags: [ 'nexpose' , 'install' ]
+
+- name: Start and enable Nexpose
+  service: name={{ nexpose_service_name }} enabled=yes state=started
+  tags: [ 'nexpose' ]
+
+- name: Wait for nse.xml
+  wait_for:
+    path: "{{ nexpose_install_dir }}//nse/conf/nse.xml"
+    delay: 30
+  when: nexpose_engine and nexpose_install.stdout.find('skipped') == -1
   tags: [ 'nexpose' , 'install' ]
 
 - name: Set Nexpose Engine port
@@ -42,6 +54,13 @@
   when: nexpose_engine
   notify: restart nexpose
   tags: [ 'nexpose' , 'install' , 'fwconfig' ]
+
+- name: Wait for nsc.xml
+  wait_for:
+    path: "{{ nexpose_install_dir }}/nsc/conf/httpd.xml"
+    delay: 30
+  when: not nexpose_engine and nexpose_install.stdout.find('skipped') == -1
+  tags: [ 'nexpose' , 'install' ]
 
 - name: Set Nexpose Console port
   lineinfile:
@@ -55,10 +74,6 @@
   when: not nexpose_engine
   notify: restart nexpose
   tags: [ 'nexpose' , 'install' , 'fwconfig' ]
-
-- name: Start and enable Nexpose
-  service: name={{ nexpose_service_name }} enabled=yes state=started
-  tags: [ 'nexpose' ]
 
 # - name: Remove nexpose installer
 #   file: /tmp/NeXposeSetup-Linux64.bin state=absent
