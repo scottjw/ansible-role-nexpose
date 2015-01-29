@@ -6,7 +6,7 @@ nexpose_logon_username: "msmith"
 
 nexpose_download_url: "http://download2.rapid7.com/download/NeXpose-v4/NeXposeSetup-Linux64.bin"
 nexpose_engine: True
-nexpose_init_service: False
+nexpose_init_service: True
 nexpose_suppress_unattended_reboot: True
 nexpose_component_typical: "{% if nexpose_engine %}False{% else %}True{% endif %}"
 nexpose_service_name: "nexpose{% if nexpose_engine %}engine{% else %}console{% endif %}.rc"
