@@ -23,6 +23,7 @@
     -Vusername='{{ nexpose_logon_username }}'
     -Vpassword1='{{ nexpose_logon_password }}'
     -Vpassword2='{{ nexpose_logon_password }}'
+    -Vsys.installationDir='{{ nexpose_install_dir }}'
     -Vsys.component.typical\$Boolean={{ nexpose_component_typical }}
     -Vsys.component.engine\$Boolean={{ nexpose_engine }}
     -VinitService\$Boolean={{ nexpose_init_service }}
@@ -30,6 +31,15 @@
   args:
     creates: /opt/rapid7/nexpose/plugins
   no_log: True
+  tags: [ 'nexpose' , 'install' ]
+
+- name: Set Nexpose Engine port
+  replace:
+    dest: "{{ nexpose_install_dir }}/nse/conf/nse.xml"
+    regexp: 'port="\d+"'
+    replace: 'port="{{ nexpose_engine_port }}"'
+    backup: yes
+  when: nexpose_engine
   tags: [ 'nexpose' , 'install' ]
 
 - name: Start and enable Nexpose

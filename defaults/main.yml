@@ -1,14 +1,18 @@
 ---
+nexpose_first_name: "Mr."
+nexpose_last_name: "Smith"
+nexpose_company_name: "MiB"
+nexpose_logon_username: "msmith"
+
 nexpose_download_url: "http://download2.rapid7.com/download/NeXpose-v4/NeXposeSetup-Linux64.bin"
-nexpose_first_name: "Sam"
-nexpose_last_name: "Doran"
-nexpose_company_name: "Royall & Company"
-nexpose_logon_username: "sdoran"
 nexpose_engine: True
 nexpose_init_service: False
 nexpose_suppress_unattended_reboot: True
 nexpose_component_typical: "{% if nexpose_engine %}False{% else %}True{% endif %}"
 nexpose_service_name: "nexpose{% if nexpose_engine %}engine{% else %}console{% endif %}.rc"
+nexpose_install_dir: /opt/rapid7/nexpose
+nexpose_console_port: 3780
+nexpose_engine_port: 40814
 
 nexpose_cacerts:
   - name: comodocalimited.crt

@@ -1,2 +1,3 @@
 ---
-# handlers file for nexpose
+- name: restart nexpose
+  service: name={{ nexpose_service_name }} state=restarted
