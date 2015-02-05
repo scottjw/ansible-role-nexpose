@@ -1,6 +1,6 @@
 ---
 - include: setup-RedHat.yml
-  when: ansible_os_family == 'RedHat' and ansible_distribution_major_version | int <= 6
+  when: ansible_os_family == 'RedHat'
   tags: firewall
 
 - include: setup-Debian.yml
@@ -96,6 +96,17 @@
 - name: Add CA Certs to key store
   java_keystore: cert={{ nexpose_ssl_cert_path }}/{{ item.name }} keystore=cacerts password=changeit alias={{ item.alias }} state={{ item.state }}
   with_items: nexpose_cacerts
+  tags: [ 'nexpose' , 'certs' ]
+
+- name: Use SIGTERM to quit Nexpose
+  lineinfile:
+    state: present
+    backup: yes
+    backrefs: yes
+    dest: /etc/init.d/{{ nexpose_service_name }}
+    regexp: '^(\s+) kill -\d+ (.*)'
+    line: '\1 kill -15 \2'
+  when: ansible_os_family == 'RedHat'
   tags: [ 'nexpose' , 'certs' ]
 
 # How to see what's in the keystore
