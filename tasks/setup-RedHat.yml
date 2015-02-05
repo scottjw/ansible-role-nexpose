@@ -1,0 +1,4 @@
+---
+- name: Set SSL certificate path
+  set_fact:
+    nexpose_ssl_cert_path: /etc/pki/tls
