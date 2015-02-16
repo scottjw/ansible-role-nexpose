@@ -2,7 +2,8 @@ Nexpose
 =========
 
 Setup Nexpose as scanner or console.
-Also included is a module that will add CA certs to the Java keystore, allowing you to add your own CA cert as a trusted source. The keystore will be replaced by Nexpose updates, so you will need to re-add them often. This role makes that easy.
+
+Also included is a module that will add CA certs to the Java keystore, allowing you to add your own CA cert as a trusted source.
 
 Requirements
 ------------
@@ -12,26 +13,44 @@ Requirements
 Role Variables
 --------------
 
-**nexpose_download_url**    URL of Nexpose install binary.
+URL of Nexpose install binary:
 
-**nexpose_first_name**      Registered user first name.
+    nexpose_download_url: "http://download2.rapid7.com/download/NeXpose-v4/NeXposeSetup-Linux64.bin"
 
-**nexpose_last_name**       Registered user last name.
+Registered user first name:
 
-**nexpose_company_name**    Registered company name.
+    nexpose_first_name: "Mr."
 
-**nexpose_logon_name**      Username for initial logon to console.
+Registered user last name:
 
-**nexpose_engine**         Whether this is a console or just a scan engine (
-Default: True)
+    nexpose_last_name: "Smith"
 
-**nexpose_init_service**    Whether to start the Nexpose service after 
-installation (Default: False)
+Registered company name:
 
-**nexpose_suppress_unattended_reboot**  Not really sure. (Default: true)
+    nexpose_company_name: "MiB"
 
-**nexpose_ca_certs**        List of Certificates to add to the deafult Java 
-keystore. This is to prevent erronous untrusted CA findings.
+Username for initial logon to console:
+
+    nexpose_logon_name: "msmith"
+
+Whether this is a console or just a scan engine:
+
+    nexpose_engine: True
+
+Whether to start the Nexpose service after installation:
+
+    nexpose_init_service: True
+
+Not really sure what this does:
+
+    nexpose_suppress_unattended_reboot: True
+
+List of Certificates to add to the deafult Java keystore. Thes must be place in the `files` directory.
+
+    nexpose_ca_certs:
+      - name: comodocalimited.crt
+        alias: ComodoCALimited
+        state: present
 
 
 Dependencies
