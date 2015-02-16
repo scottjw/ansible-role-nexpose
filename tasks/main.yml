@@ -1,11 +1,11 @@
 ---
 - include: setup-RedHat.yml
   when: ansible_os_family == 'RedHat'
-  tags: firewall
+  tags: [ 'nexpose' , 'firewall' , 'certs' ]
 
 - include: setup-Debian.yml
   when: ansible_os_family == 'Debian'
-  tags: firewall
+  tags: [ 'nexpose' , 'firewall' , 'certs' ]
 
 - name: Check if installer is already downloaded
   stat: path=/tmp/NeXposeSetup-Linux64.bin
@@ -88,17 +88,26 @@
 #   tags: [ 'nexpose' ]
 
 - name: Copy CA Certs to be added to the keystore
-  copy: src={{ item.name }} dest={{ nexpose_ssl_cert_path }} owner=root group=root mode=0644
+  copy:
+    src: "{{ item.name }}"
+    dest: "{{ nexpose_ssl_cert_path }}"
+    owner: root
+    group: root
+    mode: 0644
   with_items: nexpose_cacerts
-  when: item.state == 'present'
   tags: [ 'nexpose' , 'certs' ]
 
-- name: Add CA Certs to key store
-  java_keystore: cert={{ nexpose_ssl_cert_path }}/{{ item.name }} keystore=cacerts password=changeit alias={{ item.alias }} state={{ item.state }}
+- name: Add or remove CA Certs to/from key store
+  java_keystore:
+    cert: "{{ nexpose_ssl_cert_path }}/{{ item.name }}"
+    keystore: 'cacerts'
+    password: 'changeit'
+    alias: "{{ item.alias }}"
+    state: "{{ item.state }}"
   with_items: nexpose_cacerts
   tags: [ 'nexpose' , 'certs' ]
 
-- name: Use SIGTERM to quit Nexpose
+- name: Use SIGTERM to quit Nexpose in init script
   lineinfile:
     state: present
     backup: yes
