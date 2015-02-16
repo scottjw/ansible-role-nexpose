@@ -22,11 +22,3 @@ nexpose_cacerts:
   - name: comodohighassurancesecureserverca.crt
     alias: ComodoHighAssuranceCA
     state: present
-
-  - name: comodorsaca.crt
-    alias: ComodoRSACA
-    state: present
-
-  - name: comodorsavalidationca.crt
-    alias: ComodoRSAValidationCA
-    state: present
