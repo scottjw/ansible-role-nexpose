@@ -1,38 +1,83 @@
-Role Name
+Nexpose
 =========
 
-A brief description of the role goes here.
+Setup Nexpose as scanner or console.
+
+Also included is a module that will add CA certs to the Java keystore, allowing you to add your own CA cert as a trusted source.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+- Open HTTPS port in firewall on host (or disable firewall)
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+URL of Nexpose install binary:
+
+    nexpose_download_url: "http://download2.rapid7.com/download/NeXpose-v4/NeXposeSetup-Linux64.bin"
+
+Registered user first name:
+
+    nexpose_first_name: "Mr."
+
+Registered user last name:
+
+    nexpose_last_name: "Smith"
+
+Registered company name:
+
+    nexpose_company_name: "MiB"
+
+Username for initial logon to console:
+
+    nexpose_logon_name: "msmith"
+
+Whether this is a console or just a scan engine:
+
+    nexpose_engine: True
+
+Whether to start the Nexpose service after installation:
+
+    nexpose_init_service: True
+
+Not really sure what this does:
+
+    nexpose_suppress_unattended_reboot: True
+
+List of Certificates to add to the deafult Java keystore. Thes must be place in the `files` directory.
+
+    nexpose_ca_certs:
+      - name: comodocalimited.crt
+        alias: ComodoCALimited
+        state: present
+
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+None.
 
 Example Playbook
 ----------------
+You can use `var_prompt` to enter the initial password.
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+```yaml
+    - name: Configure Nexpose console or scanner
+      hosts: nexpose
+      sudo: yes
 
-    - hosts: servers
+      vars_prompt:
+        - name: nexpose_logon_password
+          prompt: "Enter logon password"
+          private: yes
+          confirm: yes
+
       roles:
-         - { role: username.rolename, x: 42 }
+        - nexpose
+```
 
 License
 -------
 
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+MIT
