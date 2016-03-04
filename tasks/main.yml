@@ -1,11 +1,17 @@
 ---
 - include: setup-RedHat.yml
   when: ansible_os_family == 'RedHat'
-  tags: [ 'nexpose' , 'firewall' , 'certs' ]
+  tags:
+    - nexpose
+    - firewall
+    - certs
 
 - include: setup-Debian.yml
   when: ansible_os_family == 'Debian'
-  tags: [ 'nexpose' , 'firewall' , 'certs' ]
+  tags:
+    - nexpose
+    - firewall
+    - certs
 
 - name: Install support packages
   package:
@@ -19,7 +25,8 @@
   stat:
     path: /var/tmp/NeXposeSetup-Linux64.bin
   register: install_file_check
-  tags: [ 'nexpose' ]
+  tags:
+    - nexpose
 
 - name: Download nexpose installer
   get_url:
@@ -27,11 +34,13 @@
     dest: /var/tmp
     mode: 0700
   when: not install_file_check.stat.exists
-  tags: [ 'nexpose' ]
+  tags:
+    - nexpose
 
 - name: Diasble SELinux
   selinux: state=disabled
-  tags: [ 'nexpose' ]
+  tags:
+    - nexpose
 
 # Look in /opt/rapid7/nexpose/.install4j/response.varfile for available variables
 - name: Install nexpose
@@ -53,21 +62,26 @@
   register: nexpose_install
   failed_when: nexpose_install.stdout.find('failed') != -1 or nexpose_install.stderr
   no_log: True
-  tags: [ 'nexpose' , 'install' ]
+  tags:
+    - nexpose
+    - install
 
 - name: Start and enable Nexpose
   service:
     name: "{{ nexpose_service_name }}"
     enabled: yes
     state: started
-  tags: [ 'nexpose' ]
+  tags:
+    - nexpose
 
 - name: Wait for nse.xml
   wait_for:
     path: "{{ nexpose_install_dir }}/nse/conf/nse.xml"
     delay: 10
   when: nexpose_engine
-  tags: [ 'nexpose' , 'install' ]
+  tags:
+    - nexpose
+    - install
 
 - name: Set Nexpose Engine port
   replace:
@@ -77,14 +91,19 @@
     replace: 'port="{{ nexpose_engine_port }}"'
   when: nexpose_engine
   notify: restart nexpose
-  tags: [ 'nexpose' , 'install' , 'fwconfig' ]
+  tags:
+    - nexpose
+    - install
+    - fwconfig
 
 - name: Wait for nsc.xml
   wait_for:
     path: "{{ nexpose_install_dir }}/nsc/conf/httpd.xml"
     delay: 30
   when: not nexpose_engine
-  tags: [ 'nexpose' , 'install' ]
+  tags:
+    - nexpose
+    - install
 
 - name: Set Nexpose Console port
   lineinfile:
@@ -108,7 +127,10 @@
       }
   when: not nexpose_engine
   notify: restart nexpose
-  tags: [ 'nexpose' , 'install' , 'fwconfig' ]
+  tags:
+    - nexpose
+    - install
+    - fwconfig
 
 # - name: Remove nexpose installer
 #   file: /tmp/NeXposeSetup-Linux64.bin state=absent
@@ -122,7 +144,9 @@
     group: root
     mode: 0644
   with_items: "{{ nexpose_cacerts }}"
-  tags: [ 'nexpose' , 'certs' ]
+  tags:
+    - nexpose
+    - certs
 
 - name: Add or remove CA Certs to/from key store
   java_keystore:
@@ -132,7 +156,9 @@
     alias: "{{ item.alias }}"
     state: "{{ item.state }}"
   with_items: "{{ nexpose_cacerts }}"
-  tags: [ 'nexpose' , 'certs' ]
+  tags:
+    - nexpose
+    - certs
 
 - name: Use SIGTERM to quit Nexpose in init script
   lineinfile:
@@ -143,7 +169,9 @@
     regexp: '^(\s+) kill -\d+ (.*)'
     line: '\1 kill -15 \2'
   when: ansible_os_family == 'RedHat'
-  tags: [ 'nexpose' , 'certs' ]
+  tags:
+    - nexpose
+    - certs
 
 - name: Directions for connecting to Console
   debug:
