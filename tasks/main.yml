@@ -121,7 +121,7 @@
     owner: root
     group: root
     mode: 0644
-  with_items: nexpose_cacerts
+  with_items: "{{ nexpose_cacerts }}"
   tags: [ 'nexpose' , 'certs' ]
 
 - name: Add or remove CA Certs to/from key store
@@ -131,7 +131,7 @@
     password: 'changeit'
     alias: "{{ item.alias }}"
     state: "{{ item.state }}"
-  with_items: nexpose_cacerts
+  with_items: "{{ nexpose_cacerts }}"
   tags: [ 'nexpose' , 'certs' ]
 
 - name: Use SIGTERM to quit Nexpose in init script
