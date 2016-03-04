@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: Sam Doran
-  description: "Install Nexpose Console on Engine."
+  description: "Install Nexpose Console or Engine."
   company:
   license: MIT
   min_ansible_version: 1.9
