@@ -8,12 +8,16 @@
   tags: [ 'nexpose' , 'firewall' , 'certs' ]
 
 - name: Check if installer is already downloaded
-  stat: path=/tmp/NeXposeSetup-Linux64.bin
+  stat:
+    path: /var/tmp/NeXposeSetup-Linux64.bin
   register: install_file_check
   tags: [ 'nexpose' ]
 
 - name: Download nexpose installer
-  get_url: url={{ nexpose_download_url }} dest=/tmp mode=0700
+  get_url:
+    url: "{{ nexpose_download_url }}"
+    dest: /var/tmp
+    mode: 0700
   when: not install_file_check.stat.exists
   tags: [ 'nexpose' ]
 
@@ -23,8 +27,8 @@
 
 # Look in /opt/rapid7/nexpose/.install4j/response.varfile for available variables
 - name: Install nexpose
-  shell: >
-    /tmp/NeXposeSetup-Linux64.bin -q -overwrite
+  command: >
+    /var/tmp/NeXposeSetup-Linux64.bin -q -overwrite
     -Vfirstname='{{ nexpose_first_name }}'
     -Vlastname='{{ nexpose_last_name }}'
     -Vcompany='{{ nexpose_company_name }}'
@@ -37,13 +41,17 @@
     -VinitService\$Boolean={{ nexpose_init_service }}
     -Dinstall4j.suppressUnattendedReboot='{{ nexpose_suppress_unattended_reboot }}'
   args:
-    creates: /opt/rapid7/nexpose/plugins
+    creates: /opt/rapid7/nexpose
   register: nexpose_install
+  failed_when: nexpose_install.stdout.find('failed') != -1 or nexpose_install.stderr
   no_log: True
   tags: [ 'nexpose' , 'install' ]
 
 - name: Start and enable Nexpose
-  service: name={{ nexpose_service_name }} enabled=yes state=started
+  service:
+    name: "{{ nexpose_service_name }}"
+    enabled: yes
+    state: started
   tags: [ 'nexpose' ]
 
 - name: Wait for nse.xml
