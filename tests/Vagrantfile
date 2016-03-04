@@ -1,0 +1,34 @@
+# add '../../' to roles_path in ansible.cfg to use this file
+Vagrant.configure(2) do |config|
+
+  # CentOS 6
+  config.vm.define "el6" do |el6|
+    el6.vm.box = "geerlingguy/centos6"
+    el6.vm.network "forwarded_port", guest: 3780, host: 3786
+  end
+
+  # CentOS 7
+  config.vm.define "el7" do |el7|
+    el7.vm.box = "geerlingguy/centos7"
+    el7.vm.network "forwarded_port", guest: 3780, host: 3787
+  end
+
+  # Ubuntu 12.04
+  config.vm.define "ub12" do |ub12|
+    ub12.vm.box = "geerlingguy/ubuntu1204"
+    ub12.vm.network "forwarded_port", guest: 3780, host: 3788
+    ub12.vm.synced_folder "tmp/", "/mnt"
+  end
+
+  # Ubuntu 14.04
+  config.vm.define "ub14" do |ub14|
+    ub14.vm.box = "geerlingguy/ubuntu1404"
+    ub14.vm.network "forwarded_port", guest: 3780, host: 3789
+    ub14.vm.synced_folder "tmp/", "/mnt"
+  end
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "vagrant.yml"
+  end
+
+end
