@@ -12,7 +12,7 @@ galaxy_info:
       - 6
 
   galaxy_tags:
-    - "vulnerability scanning"
+    - vulnerability
     - scanning
     - nexpose
     - security
