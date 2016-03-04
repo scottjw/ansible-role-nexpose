@@ -64,9 +64,9 @@
 
 - name: Wait for nse.xml
   wait_for:
-    path: "{{ nexpose_install_dir }}//nse/conf/nse.xml"
-    delay: 30
-  when: nexpose_engine and nexpose_install.stdout.find('skipped') == -1
+    path: "{{ nexpose_install_dir }}/nse/conf/nse.xml"
+    delay: 10
+  when: nexpose_engine
   tags: [ 'nexpose' , 'install' ]
 
 - name: Set Nexpose Engine port
@@ -83,7 +83,7 @@
   wait_for:
     path: "{{ nexpose_install_dir }}/nsc/conf/httpd.xml"
     delay: 30
-  when: not nexpose_engine and nexpose_install.stdout.find('skipped') == -1
+  when: not nexpose_engine
   tags: [ 'nexpose' , 'install' ]
 
 - name: Set Nexpose Console port
