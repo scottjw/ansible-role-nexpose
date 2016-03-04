@@ -1,24 +1,20 @@
 ---
 galaxy_info:
   author: Sam Doran
-  description: "Install Nexpose"
+  description: "Install Nexpose Console on Engine."
   company:
   license: MIT
-  min_ansible_version: 1.6
+  min_ansible_version: 1.9
 
   platforms:
   - name: EL
     versions:
       - 6
-      - 7
 
-  - name: Ubuntu
-    versions:
-      - precise
-      - trusty
-
-  categories:
-    - networking
-    - system
+  galaxy_tags:
+    - "vulnerability scanning"
+    - scanning
+    - nexpose
+    - security
 
 dependencies: []
