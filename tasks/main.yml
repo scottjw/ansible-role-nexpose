@@ -38,6 +38,7 @@
     - nexpose
 
 # Look in /opt/rapid7/nexpose/.install4j/response.varfile for available variables
+# This command comes from this post: https://community.rapid7.com/thread/2169
 - name: Install nexpose
   command: >
     /var/tmp/NeXposeSetup-Linux64.bin -q -overwrite
