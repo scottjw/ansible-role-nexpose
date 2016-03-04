@@ -7,6 +7,14 @@
   when: ansible_os_family == 'Debian'
   tags: [ 'nexpose' , 'firewall' , 'certs' ]
 
+- name: Install support packages
+  package:
+    name: screen
+    state: latest
+  tags:
+    - nexpose
+    - nexpose-packages
+
 - name: Check if installer is already downloaded
   stat:
     path: /var/tmp/NeXposeSetup-Linux64.bin
@@ -136,6 +144,13 @@
     line: '\1 kill -15 \2'
   when: ansible_os_family == 'RedHat'
   tags: [ 'nexpose' , 'certs' ]
+
+- name: Directions for connecting to Console
+  debug:
+    msg: "1) ssh in to Engine   2) sudo screen -r   3) show consoles   4) enable console [number]   5) Ctrl-A Ctrl-D"
+  tags:
+    - nexpose
+    - debug
 
 # How to see what's in the keystore
 # /opt/rapid7/nexpose/_jvm*/bin/keytool -list -v -keystore /opt/rapid7/nexpose/_jvm*/lib/security/cacerts
