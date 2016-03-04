@@ -37,11 +37,6 @@
   tags:
     - nexpose
 
-- name: Diasble SELinux
-  selinux: state=disabled
-  tags:
-    - nexpose
-
 # Look in /opt/rapid7/nexpose/.install4j/response.varfile for available variables
 - name: Install nexpose
   command: >
