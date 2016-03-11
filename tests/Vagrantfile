@@ -5,6 +5,10 @@ Vagrant.configure(2) do |config|
   config.vm.define "el6" do |el6|
     el6.vm.box = "geerlingguy/centos6"
     el6.vm.network "forwarded_port", guest: 3780, host: 3786
+    config.vm.provider "virtualbox" do |vbox|
+      vbox.memory = 2048
+      vbox.cpus = 2
+    end
   end
 
   # CentOS 7
