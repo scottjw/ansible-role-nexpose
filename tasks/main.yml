@@ -2,7 +2,7 @@
 - name: Install support packages
   package:
     name: screen
-    state: latest
+    state: present
   tags:
     - nexpose
     - nexpose-packages
@@ -43,7 +43,7 @@
     creates: /opt/rapid7/nexpose
   register: nexpose_install
   failed_when: nexpose_install.stdout.find('failed') != -1 or nexpose_install.stderr
-  no_log: True
+  #no_log: True
   tags:
     - nexpose
     - install

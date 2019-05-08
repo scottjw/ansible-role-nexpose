@@ -2,7 +2,7 @@
 galaxy_info:
   author: Scott Williamson
   description: "Install Nexpose Console or Engine."
-  company: 
+  company: none
   license: MIT
   min_ansible_version: 1.9
 
