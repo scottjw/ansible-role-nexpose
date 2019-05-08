@@ -34,11 +34,11 @@
       dest: "/var/tmp/nexposeenginevar.txt"
       content: |
         communicationDirectionChoice$Integer=0
-        company='{{ nexpose_company_name }}'
+        company={{ nexpose_company_name }}
         dbPort=5432
-        firstname='{{ nexpose_first_name }}'
-        lastname='{{ nexpose_last_name }}'
-        port=443
+        firstname={{ nexpose_first_name }}
+        lastname={{ nexpose_last_name }}
+        port=8443
         proxyHost=
         proxyPort=
         sys.adminRights$Boolean=true
@@ -56,8 +56,8 @@
   args:
     creates: /opt/rapid7/nexpose
   register: nexpose_install
-  failed_when: nexpose_install.stdout.find('failed') != -1 or nexpose_install.stderr
-  #no_log: True
+  ignore_errors: yes  
+  no_log: True
   tags:
     - nexpose
     - install
@@ -131,18 +131,18 @@
 #   file: /tmp/NeXposeSetup-Linux64.bin state=absent
 #   tags: [ 'nexpose' ]
 
-- name: Use SIGTERM to quit Nexpose in init script
-  lineinfile:
-    state: present
-    backup: yes
-    backrefs: yes
-    dest: /etc/init.d/{{ nexpose_service_name }}
-    regexp: '^(\s+) kill -\d+ (.*)'
-    line: '\1 kill -15 \2'
-  when: ansible_os_family == 'RedHat'
-  tags:
-    - nexpose
-    - certs
+#- name: Use SIGTERM to quit Nexpose in init script
+#  lineinfile:
+#    state: present
+#    backup: yes
+#    backrefs: yes
+#    dest: /etc/init.d/{{ nexpose_service_name }}
+#    regexp: '^(\s+) kill -\d+ (.*)'
+#    line: '\1 kill -15 \2'
+#  when: ansible_os_family == 'RedHat'
+#  tags:
+#    - nexpose
+#    - certs
 
 - name: Directions for connecting to Console
   debug:

@@ -10,7 +10,7 @@ nexpose_engine: True
 nexpose_init_service: True
 nexpose_suppress_unattended_reboot: True
 nexpose_component_typical: "{% if nexpose_engine %}False{% else %}True{% endif %}"
-nexpose_service_name: "nexpose{% if nexpose_engine %}engine{% else %}console{% endif %}.rc"
+nexpose_service_name: "nexpose{% if nexpose_engine %}engine{% else %}console{% endif %}.service"
 nexpose_install_dir: /opt/rapid7/nexpose
 nexpose_console_port: 3780
 nexpose_engine_port: 443
