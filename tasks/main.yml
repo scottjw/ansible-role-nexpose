@@ -29,25 +29,30 @@
   tags:
     - nexpose
 
+- name: Write install file
+  copy:
+      dest: "/var/tmp/nexposeenginevar.txt"
+      content: |
+        communicationDirectionChoice$Integer=0
+        company='{{ nexpose_company_name }}'
+        dbPort=5432
+        firstname='{{ nexpose_first_name }}'
+        lastname='{{ nexpose_last_name }}'
+        port=443
+        proxyHost=
+        proxyPort=
+        sys.adminRights$Boolean=true
+        sys.component.engine$Boolean=true
+        sys.component.typical$Boolean=false
+        sys.installationDir=/opt/rapid7/nexpose
+        sys.languageId=en
+        sys.programGroupDisabled$Boolean=true
+
 # Look in /opt/rapid7/nexpose/.install4j/response.varfile for available variables
 # This command comes from this post: https://community.rapid7.com/thread/2169
-- name: Install nexpose
+- name: Install nexpose  
   command: >
-    /var/tmp/Rapid7Setup-Linux64.bin -q -overwrite
-    -VcommunicationDirectionChoice$Integer=0
-    -Vcompany='{{ nexpose_company_name }}'
-    -VdbPort=5432
-    -Vfirstname='{{ nexpose_first_name }}'
-    -Vlastname='{{ nexpose_last_name }}'
-    -Vport=443
-    -VproxyHost=
-    -VproxyPort=
-    -Vsys.adminRights$Boolean=true
-    -Vsys.component.engine$Boolean=true
-    -Vsys.component.typical$Boolean=false
-    -Vsys.installationDir=/opt/rapid7/nexpose
-    -Vsys.languageId=en
-    -Vsys.programGroupDisabled$Boolean=true
+    /var/tmp/Rapid7Setup-Linux64.bin -q -overwrite -varfile /var/tmp/nexposeenginevar.txt
   args:
     creates: /opt/rapid7/nexpose
   register: nexpose_install
