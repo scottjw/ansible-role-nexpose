@@ -95,7 +95,6 @@
     dest: "{{ item.dest }}"
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
-    backup: yes
   with_items:
     - {
         dest: '{{ nexpose_install_dir }}/nsc/conf/httpd.xml',
