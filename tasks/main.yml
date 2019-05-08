@@ -1,18 +1,4 @@
 ---
-- include: setup-RedHat.yml
-  when: ansible_os_family == 'RedHat'
-  tags:
-    - nexpose
-    - firewall
-    - certs
-
-- include: setup-Debian.yml
-  when: ansible_os_family == 'Debian'
-  tags:
-    - nexpose
-    - firewall
-    - certs
-
 - name: Install support packages
   package:
     name: screen
@@ -131,30 +117,6 @@
 # - name: Remove nexpose installer
 #   file: /tmp/NeXposeSetup-Linux64.bin state=absent
 #   tags: [ 'nexpose' ]
-
-- name: Copy CA Certs to be added to the keystore
-  copy:
-    src: "{{ item.name }}"
-    dest: "{{ nexpose_ssl_cert_path }}"
-    owner: root
-    group: root
-    mode: 0644
-  with_items: "{{ nexpose_cacerts }}"
-  tags:
-    - nexpose
-    - certs
-
-- name: Add or remove CA Certs to/from key store
-  java_keystore:
-    cert: "{{ nexpose_ssl_cert_path }}/{{ item.name }}"
-    keystore: 'cacerts'
-    password: 'changeit'
-    alias: "{{ item.alias }}"
-    state: "{{ item.state }}"
-  with_items: "{{ nexpose_cacerts }}"
-  tags:
-    - nexpose
-    - certs
 
 - name: Use SIGTERM to quit Nexpose in init script
   lineinfile:

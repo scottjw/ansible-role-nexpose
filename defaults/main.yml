@@ -12,13 +12,4 @@ nexpose_component_typical: "{% if nexpose_engine %}False{% else %}True{% endif %
 nexpose_service_name: "nexpose{% if nexpose_engine %}engine{% else %}console{% endif %}.rc"
 nexpose_install_dir: /opt/rapid7/nexpose
 nexpose_console_port: 3780
-nexpose_engine_port: 40814
-
-nexpose_cacerts:
-  - name: comodocalimited.crt
-    alias: ComodoCALimited
-    state: present
-
-  - name: comodohighassurancesecureserverca.crt
-    alias: ComodoHighAssuranceCA
-    state: present
+nexpose_engine_port: 443

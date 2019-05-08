@@ -1,15 +1,15 @@
 ---
 galaxy_info:
-  author: Sam Doran
+  author: Scott Williamson
   description: "Install Nexpose Console or Engine."
-  company:
+  company: 
   license: MIT
   min_ansible_version: 1.9
 
   platforms:
   - name: EL
     versions:
-      - 6
+      - 7
 
   galaxy_tags:
     - vulnerability

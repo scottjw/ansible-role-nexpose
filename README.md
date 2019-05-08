@@ -1,10 +1,10 @@
 Nexpose
 =========
-[![Galaxy](https://img.shields.io/badge/galaxy-samdoran.nexpose-blue.svg?style=flat)](https://galaxy.ansible.com/samdoran/nexpose)
+[![Galaxy](https://img.shields.io/badge/galaxy-scottjw.ansible_role_nexpose-blue.svg?style=flat)](https://galaxy.ansible.com/scottjw/ansible_role_nexpose)
 
-Setup a [Nexpose](http://www.rapid7.com/products/nexpose/) Console on Engine.
+Based on / forked from [Sam Doran's project](https://github.com/samdoran/ansible-role-nexpose)
 
-Also included is a module that will add CA certs to the Java keystore, allowing you to add your own CA cert as a trusted source. This capability is now available from the Console interface, but I wrote this module before that feature was added.
+Setup a [Nexpose](http://www.rapid7.com/products/nexpose/) Console or Engine.
 
 This role is in no way assosiated with [Rapid7](http://www.rapid7.com) and they do not endorse this role. Regardless, they are a great company and you should check them out. They make some [really](http://www.rapid7.com/products/metasploit/) [great](http://www.rapid7.com/products/appspider/) [stuff](http://www.rapid7.com/products/insightidr/).
 
