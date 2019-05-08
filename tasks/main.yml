@@ -23,22 +23,29 @@
   tags:
     - nexpose
 
+-name: Disable SELinux
+  - selinux:
+    state: disabled
+
 # Look in /opt/rapid7/nexpose/.install4j/response.varfile for available variables
 # This command comes from this post: https://community.rapid7.com/thread/2169
 - name: Install nexpose
   command: >
     /var/tmp/Rapid7Setup-Linux64.bin -q -overwrite
+    -VcommunicationDirectionChoice$Integer=0
+    -Vcompany='{{ nexpose_company_name }}'
+    -VdbPort=5432
     -Vfirstname='{{ nexpose_first_name }}'
     -Vlastname='{{ nexpose_last_name }}'
-    -Vcompany='{{ nexpose_company_name }}'
-    -Vusername='{{ nexpose_logon_username }}'
-    -Vpassword1='{{ nexpose_logon_password }}'
-    -Vpassword2='{{ nexpose_logon_password }}'
-    -Vsys.installationDir='{{ nexpose_install_dir }}'
-    -Vsys.component.typical\$Boolean={{ nexpose_component_typical }}
-    -Vsys.component.engine\$Boolean={{ nexpose_engine }}
-    -VinitService\$Boolean={{ nexpose_init_service }}
-    -Dinstall4j.suppressUnattendedReboot='{{ nexpose_suppress_unattended_reboot }}'
+    -Vport=443
+    -VproxyHost=
+    -VproxyPort=
+    -Vsys.adminRights$Boolean=true
+    -Vsys.component.engine$Boolean=true
+    -Vsys.component.typical$Boolean=false
+    -Vsys.installationDir=/opt/rapid7/nexpose
+    -Vsys.languageId=en
+    -Vsys.programGroupDisabled$Boolean=true
   args:
     creates: /opt/rapid7/nexpose
   register: nexpose_install
