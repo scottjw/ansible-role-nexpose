@@ -23,7 +23,7 @@
   tags:
     - nexpose
 
--name: Disable SELinux
+- name: Disable SELinux
   - selinux:
     state: disabled
 
