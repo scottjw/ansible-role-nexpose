@@ -9,7 +9,7 @@
 
 - name: Check if installer is already downloaded
   stat:
-    path: /var/tmp/NeXposeSetup-Linux64.bin
+    path: /var/tmp/Rapid7Setup-Linux64.bin
   register: install_file_check
   tags:
     - nexpose
@@ -27,7 +27,7 @@
 # This command comes from this post: https://community.rapid7.com/thread/2169
 - name: Install nexpose
   command: >
-    /var/tmp/NeXposeSetup-Linux64.bin -q -overwrite
+    /var/tmp/Rapid7Setup-Linux64.bin -q -overwrite
     -Vfirstname='{{ nexpose_first_name }}'
     -Vlastname='{{ nexpose_last_name }}'
     -Vcompany='{{ nexpose_company_name }}'
