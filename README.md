@@ -4,9 +4,11 @@ Nexpose
 
 Based on / forked from [Sam Doran's project](https://github.com/samdoran/ansible-role-nexpose)
 
-Setup a [Nexpose](http://www.rapid7.com/products/nexpose/) Console or Engine.
+Setup a [Nexpose](http://www.rapid7.com/products/nexpose/) ~~Console~~ or Engine.
 
-This role is in no way assosiated with [Rapid7](http://www.rapid7.com) and they do not endorse this role. Regardless, they are a great company and you should check them out. They make some [really](http://www.rapid7.com/products/metasploit/) [great](http://www.rapid7.com/products/appspider/) [stuff](http://www.rapid7.com/products/insightidr/).
+Console deployment is not complete.
+
+This role is in no way assosiated with [Rapid7](http://www.rapid7.com) and they do not endorse this role. 
 
 Requirements
 ------------
@@ -56,7 +58,7 @@ Here is a playbook to setup a Nexpose Console using the standard HTTPS port. You
       confirm: yes
 
   roles:
-    - nexpose
+    - ansible-role-nexpose
 ```
 
 Here is playbook to setup a Nexpose Engine:
@@ -67,7 +69,7 @@ Here is playbook to setup a Nexpose Engine:
     become: yes
 
     roles:
-      - nexpose
+      - ansible-role-nexpose
 ```
 
 License
